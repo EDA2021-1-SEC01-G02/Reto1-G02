@@ -111,8 +111,19 @@ def newArtist(name):
     artist['info'] = 'x'
     return artist
 
+def sublist(lst,pos,numelement):
+    return lt.sublist(lst,pos,numelement)
 
 # Funciones de consulta
+def searchArtist(catalog,artist_info,artist):
+    resultado = lt.newList()
+    print(resultado)
+    print(lt.size(catalog))
+    for artwork in lt.size(catalog):
+        print(artwork)
+
+    return resultado
+
 def getNatInfo(artists_info, artistsInfo):
     natList = {
 
@@ -188,6 +199,18 @@ def compareartists(artistname1, artist):
         return 0
     return -1
     return None
+
+def cmpArtworkByDateAdquired(artwork1,artwork2):
+    resultado = False
+    date1 = artwork1["DateAdquired"].split("-")
+    date2 = artwork2["DateAdquired"].split("-")
+    if date1[0] < date2[0]:
+        resultado = True
+    elif date1[1] < date2[1]:
+        resultado = True
+    elif date1[2] < date2[2]:
+        resultado = True
+    return resultado
 
 def compareCont(item1, item2):
     if item1[0] > item2[0]:

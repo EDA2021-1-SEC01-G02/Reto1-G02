@@ -63,8 +63,15 @@ def loadArtistsinfo(artists_info):
 
 
 # Funciones de ordenamiento
+def sortByDate(lst,date1,date2,tamanio):
+    model.sortByDate(lst,tamanio)
+    pass
 
 # Funciones de consulta sobre el catálogo
+def artistsTecnique (catalog,artist_info,artist):
+    artistArtWorks = model.searchArtist(catalog,artist_info,artist)
+    pass
+
 def ObrasPorNacionalidad(artworks, artist_info):
     consIDs =  model.newList('ARRAY_LIST', None)
     size = artworks['size'] + 1

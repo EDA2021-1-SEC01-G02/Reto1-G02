@@ -84,17 +84,17 @@ while True:
 
     elif int(inputs[0]) == 2:
         print(lt.firstElement(artists_info))
-
-        
-
     elif int(inputs[0]) == 3:
-        pass
+        date1 = input("Digite la primera fecha: ")
+        date2 = input("Digite la segunda fecha: ")
+        tamanio = input("Tamaño de muestra: ")
     elif int(inputs[0]) == 4:
+        #TODO algo del req 3
+        #artistsTecnique(catalog,artists_info,"Louise Bourgeois")
         pass
     elif int(inputs[0]) == 5:
         artworks = catalog['artworks']
         controller.ObrasPorNacionalidad(artworks, artists_info)
-        
         pass
 
     else:
