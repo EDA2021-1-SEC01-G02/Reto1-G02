@@ -63,8 +63,9 @@ def loadArtistsinfo(artists_info):
 
 
 # Funciones de ordenamiento
-def sortByDate(lst,date1,date2,tamanio):
-    model.sortByDate(lst,tamanio)
+def sortByDate(lst,date1,date2,tamanio,sortType):
+    model.sortByDate(lst,sortType )
+    
     pass
 
 # Funciones de consulta sobre el catálogo

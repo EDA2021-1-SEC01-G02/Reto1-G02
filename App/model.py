@@ -29,6 +29,9 @@ from DISClib.DataStructures.arraylist import addLast, defaultfunction, getElemen
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort as ins
+from DISClib.Algorithms.Sorting import mergesort as me
+from DISClib.Algorithms.Sorting import quicksort as qu
 import pandas as pd
 assert cf
 
@@ -237,6 +240,19 @@ def sortNat(consIDs):
     great = lt.firstElement(lessEl)
     print('La nacionalidad con mas obras es %s con %s obras.' %(great[1].capitalize(),great[0]))
     return great[1]
+
+
+def sortByDate(lst, sortType):
+
+    if sortType == 1:
+        ins.sort(lst, cmpArtworkByDateAdquired)
+    elif sortType == 2:
+        sa.sort(lst,cmpArtworkByDateAdquired)
+    elif sortType == 3:
+        me.sort(lst,cmpArtworkByDateAdquired)
+    elif sortType == 4:
+        qu.sort(lst,cmpArtworkByDateAdquired)
+    
 
 def partition(lst, lo, hi, lessequalfunction):
     follower = leader = lo

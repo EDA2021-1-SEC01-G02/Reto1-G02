@@ -88,6 +88,15 @@ while True:
         date1 = input("Digite la primera fecha: ")
         date2 = input("Digite la segunda fecha: ")
         tamanio = input("Tamaño de muestra: ")
+        print("Elija que tipo de ordenamiento desea: ")
+        print("1- InsertionSort")
+        print("2- Shell")
+        print("3- Merge ")
+        print("4- Quick")
+        sortType = input('')
+
+        controller.sortByDate(catalog['artworks'], date1,date2,tamanio, sortType)
+
     elif int(inputs[0]) == 4:
         #TODO algo del req 3
         #artistsTecnique(catalog,artists_info,"Louise Bourgeois")
