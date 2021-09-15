@@ -47,7 +47,7 @@ def newCatalog():
         "artworks" : None,
         "artists" : None,
     }
-    catalog['artworks'] =  lt.newList()
+    catalog['artworks'] =  lt.newList('ARRAY_LIST', None)
     catalog['artists'] = lt.newList('ARRAY_LIST',
                                     cmpfunction=compareartists)
     return catalog
@@ -116,6 +116,28 @@ def newArtist(name):
 
 def sublist(lst,pos,numelement):
     return lt.sublist(lst,pos,numelement)
+
+
+def subListByDate(lst,date1,date2):
+    size = 1 + lt.size(lst)
+    dateStart = {'DateAcquired' : date1}
+    dateEnd = {'DateAcquired' : date2}
+    for i in range(1, size):
+        if cmpArtworkByDateAdquired(dateStart, lt.getElement(lst,i)) == True:
+            pos1 = i - 1
+           
+            break
+    for i in range(pos1, size):
+        if cmpArtworkByDateAdquired(dateEnd, lt.getElement(lst,i)) == True:
+            pos2 = i - 1
+           
+            break
+    numelement = pos2 - pos1
+    
+    a= lt.subList(lst, pos1, numelement)
+
+
+
 
 # Funciones de consulta
 def searchArtist(catalog,artist_info,artist):
@@ -201,17 +223,22 @@ def compareartists(artistname1, artist):
     if (artistname1.lower() in artist['name'].lower()):
         return 0
     return -1
-    return None
+
 
 def cmpArtworkByDateAdquired(artwork1,artwork2):
     resultado = False
-    date1 = artwork1["DateAdquired"].split("-")
-    date2 = artwork2["DateAdquired"].split("-")
-    if date1[0] < date2[0]:
+    date1 = artwork1["DateAcquired"].split("-")
+    date2 = artwork2["DateAcquired"].split("-")
+    if len(date1)!= 3:
+        date1 = ['0000','00','00']
+    if len(date2) != 3:
+        date2 = ['0000','00','00']
+
+    if date1[0] > date2[0]:
         resultado = True
-    elif date1[1] < date2[1]:
+    elif date1[1] > date2[1]:
         resultado = True
-    elif date1[2] < date2[2]:
+    elif date1[2] > date2[2]:
         resultado = True
     return resultado
 
@@ -245,13 +272,14 @@ def sortNat(consIDs):
 def sortByDate(lst, sortType):
 
     if sortType == 1:
-        ins.sort(lst, cmpArtworkByDateAdquired)
+        a = ins.sort(lst, cmpArtworkByDateAdquired)
+        print(a)
     elif sortType == 2:
         sa.sort(lst,cmpArtworkByDateAdquired)
     elif sortType == 3:
         me.sort(lst,cmpArtworkByDateAdquired)
     elif sortType == 4:
-        qu.sort(lst,cmpArtworkByDateAdquired)
+        quickSort(lst,cmpArtworkByDateAdquired)
     
 
 def partition(lst, lo, hi, lessequalfunction):

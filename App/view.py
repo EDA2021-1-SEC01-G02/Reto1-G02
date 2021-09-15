@@ -85,16 +85,16 @@ while True:
     elif int(inputs[0]) == 2:
         print(lt.firstElement(artists_info))
     elif int(inputs[0]) == 3:
-        date1 = input("Digite la primera fecha: ")
-        date2 = input("Digite la segunda fecha: ")
-        tamanio = input("Tamaño de muestra: ")
+        date1 = '2011-01-01'
+        date2 = '2018-12-12'
+        tamanio = 'input("Tamaño de muestra: ")'
         print("Elija que tipo de ordenamiento desea: ")
         print("1- InsertionSort")
         print("2- Shell")
         print("3- Merge ")
         print("4- Quick")
         sortType = input('')
-
+        
         controller.sortByDate(catalog['artworks'], date1,date2,tamanio, sortType)
 
     elif int(inputs[0]) == 4:
