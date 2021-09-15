@@ -40,7 +40,7 @@ def printMenu():
     print("2- Consultar los top x ")
     print("3- Consultar los top x ")
     print("4- Consultar los top x ")
-    print("5- Consultar los top x ")
+    print("5- Clasificar las obras por la nacionalidad de sus creadores")
 
 def initCatalog():
 
@@ -57,7 +57,7 @@ def artistsInfo():
     return controller.artistsInfo()
 
 catalog = None
-
+artists_info = None
 """
 Menu principal
 """
@@ -83,13 +83,18 @@ while True:
 
 
     elif int(inputs[0]) == 2:
-        a  = catalog['artists']
-        print((lt.firstElement(a)))
+        print(lt.firstElement(artists_info))
+
+        
+
     elif int(inputs[0]) == 3:
         pass
     elif int(inputs[0]) == 4:
         pass
     elif int(inputs[0]) == 5:
+        artworks = catalog['artworks']
+        controller.ObrasPorNacionalidad(artworks, artists_info)
+        
         pass
 
     else:

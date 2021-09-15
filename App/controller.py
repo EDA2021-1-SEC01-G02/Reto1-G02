@@ -20,8 +20,10 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from DISClib.DataStructures.arraylist import defaultfunction, firstElement
 from model import addArtWork
 import config as cf
+from DISClib.ADT import list as lt
 import model
 import csv
 
@@ -46,13 +48,13 @@ def loadData(catalog, artists_info):
    
 
 def loadArtWorks(catalog):
-    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
+    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-20pct.csv'
     input_file = csv.DictReader(open(artworksfile, encoding = 'utf-8'))
     for artwork in input_file:
         model.addArtWork(catalog, artwork)
 
 def loadArtistsinfo(artists_info):
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
+    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-20pct.csv'
     input_file =  csv.DictReader(open(artistsfile, encoding= 'utf-8'))
     
     for info in input_file:
@@ -63,3 +65,18 @@ def loadArtistsinfo(artists_info):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+def ObrasPorNacionalidad(artworks, artist_info):
+    consIDs =  model.newList('ARRAY_LIST', None)
+    size = artworks['size'] + 1
+
+    model.addConstituentID(consIDs, size, artworks)
+    consIDs = consIDs['elements']
+    natList = model.getNatInfo(artist_info, consIDs)
+    firstEl = model.sortNat(natList)
+    model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info)
+
+
+    
+
+
+    
