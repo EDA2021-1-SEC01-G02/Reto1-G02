@@ -74,20 +74,13 @@ while True:
         print('Artworks cargados: ' + str(num_artworks))
         print('Artistas cargados: ' + str(num_artists))
         print("Ultimos Artworks cargados:")
-        for i in range(0,3):
-            print(i+1,". ",(lt.getElement(catalog["artworks"],num_artworks-i)["Title"]))
-        print("--------------------------------------------------------------")
-        print("Ultimos artistas cargados: ")
-        for i in range(0,3):
-            print(i+1,". ",lt.getElement(artists_info,num_artists-i)["DisplayName"])
-
 
     elif int(inputs[0]) == 2:
         print(lt.firstElement(artists_info))
     elif int(inputs[0]) == 3:
         date1 = '2011-01-01'
         date2 = '2018-12-12'
-        tamanio = 'input("Tamaño de muestra: ")'
+        tamanio = int(input("Tamaño de muestra: "))
         print("Elija que tipo de ordenamiento desea: ")
         print("1- InsertionSort")
         print("2- Shell")

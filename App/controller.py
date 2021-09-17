@@ -64,10 +64,9 @@ def loadArtistsinfo(artists_info):
 
 # Funciones de ordenamiento
 def sortByDate(lst,date1,date2,tamanio,sortType):
-    
+
     print('  ')
     model.sortByDate(lst,sortType )
-    print(lst['elements'])
     temp = model.subListByDate(lst,date1,date2)
     
 
@@ -81,7 +80,6 @@ def ObrasPorNacionalidad(artworks, artist_info):
     size = artworks['size'] + 1
 
     model.addConstituentID(consIDs, size, artworks)
-    consIDs = consIDs['elements']
     natList = model.getNatInfo(artist_info, consIDs)
     firstEl = model.sortNat(natList)
     model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info)
