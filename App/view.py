@@ -39,7 +39,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Consultar los top x ")
     print("3- Consultar los top x ")
-    print("4- Consultar los top x ")
+    print("4- Consultar artista por medio / tecnica.")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
 
 def initCatalog():
@@ -92,8 +92,8 @@ while True:
 
     elif int(inputs[0]) == 4:
         #TODO algo del req 3
-        #artistsTecnique(catalog,artists_info,"Louise Bourgeois")
-        pass
+        controller.artistsTecnique(catalog["artworks"],artists_info,"Louise Bourgeois")
+        
     elif int(inputs[0]) == 5:
         artworks = catalog['artworks']
         controller.ObrasPorNacionalidad(artworks, artists_info)

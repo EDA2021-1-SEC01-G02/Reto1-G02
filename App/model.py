@@ -25,6 +25,7 @@
  """
 
 
+from App.controller import artistsTecnique
 from DISClib.DataStructures.arraylist import addLast, defaultfunction, firstElement, getElement
 import config as cf
 from DISClib.ADT import list as lt
@@ -145,15 +146,6 @@ def subListByDate(lst,date1,date2):
 
 
 # Funciones de consulta
-def searchArtist(catalog,artist_info,artist):
-    resultado = lt.newList()
-    print(resultado)
-    print(lt.size(catalog))
-    for artwork in lt.size(catalog):
-        print(artwork)
-
-    return resultado
-
 def getNatInfo(artists_info, artistsInfo):
     natList = {
 
@@ -203,19 +195,80 @@ def getArtworksbyArtists(artists, artworks, artists_info):
     a = pd.DataFrame(artworksByAr['elements'], columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
     print(a)
 
+def getArtworksByArtistsTechnique(artistName,artistID,artworks):
+    """
+    Recibe el ID del artista, extrae los artworks y los ordena por tecnica ademas de retornar
+    el numero de obras hechas con cierta tecnica
+
+    artistID - Id del artista
+    artworks - Datos de obras
+
+    Retorna en lista:
+
+    sortedArtworks - Obras ordenadas y seleccionadas
+    count - Diccionario usando tecnicas por llaves y numeros de obras por valor
+    """
+    #TODO Acabar
+    resultado = newList('ARRAY_LIST', None)
+    conteo = {}
+    for artwork in artworks:
+
+        codes = artwork["ConstituentID"].split(",")
+        if contOrNot (artistID,codes) == True:
+            continue
+        if artistID == artwork["ConstituentID"]:
+            lt.addLast(resultado,artwork)
+
+    #print(resultado)
+    
+    #me.sort(resultado,compareMedium)
+
+    for artwork in resultado:
+        if artwork["Medium"] not in conteo.keys():
+            conteo[artwork["Medium"]] = 0
+        conteo[artwork["Medium"]] += 1
+
+    resultado = pd.DataFrame(resultado["elements"], colums=["Title","Date","Medium","Dimensions"])
+
+    print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(len(resultado))+" obras a su nombre en el museo.")
+    print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
+    print("Su top 5 de medios / tecnicas son:")
+    print(pd.DataFrame(conteo[:5]))
+
+    print("Tres ejemplos de "+conteo.keys()[0]+"de la coleccion son: ")
+    
 
 def contOrNot(artist,codes):
-    cont = 0
     for i in codes:
         code = i.strip().strip('[').strip(']')
         if code == artist:
             return False
     return True
 
-def getArtistbyConID(codes, artists_info):
-    names = {
+def getArtistID(name,artists_info):
+    """Recibe por parametro el nombre del artista junto con el info de los artistas y devuelve su ID"""
+    result = 0
+    size = lt.size(artists_info)
+    complete = False
+    artist = 1
+    while artist <= size and not complete:
+        #TODO Averiguar por que esta cosa no toma un registro en especifico
+        temp = lt.getElement(artists_info,artist)
+        Dict = lt.firstElement(artists_info)
+        print(Dict)
+        data = Dict[temp]
+        print(temp)
+        if temp["DisplayName"].lower == name.lower():
+            result = temp["ConstituentID"]
+            complete = True
+        artist += 1
+    print(result)
+    return result
 
-    }
+
+
+def getArtistbyConID(codes, artists_info):
+    names = {}
 
     for code in codes:
         code2 =  code.strip().strip('[').strip(']')
@@ -239,6 +292,12 @@ def compareTitle(artwork1, artwork2):
     if artwork1[1].lower() > artwork2[1].lower():
         return True
     return False
+
+def compareTechnique(technique,artistTecniques):
+    if technique in artistsTecnique:
+        return True
+    return False
+    
 
 
 def cmpArtworkByDateAdquired(artwork1,artwork2):

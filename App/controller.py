@@ -21,7 +21,6 @@
  """
 
 from DISClib.DataStructures.arraylist import defaultfunction, firstElement
-from model import addArtWork
 import config as cf
 from DISClib.ADT import list as lt
 import model
@@ -71,9 +70,14 @@ def sortByDate(lst,date1,date2,tamanio,sortType):
     
 
 # Funciones de consulta sobre el catálogo
-def artistsTecnique (catalog,artist_info,artist):
-    artistArtWorks = model.searchArtist(catalog,artist_info,artist)
-    pass
+def artistsTecnique (artworks,artist_info,artist):
+    consID = model.newList("ARRAY_LIST",None)
+    size = artworks["size"]+1
+    model.addConstituentID(consID,size,artworks)
+
+    artistID = model.getArtistID(artist,artist_info)
+    artistArtWorks = model.getArtworksbyArtists(artistID,artworks)
+    
 
 def ObrasPorNacionalidad(artworks, artist_info):
     consIDs =  model.newList('ARRAY_LIST', None)
