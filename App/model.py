@@ -99,6 +99,9 @@ def addArtistsInfo(artists_info, info):
         data[info['ConstituentID']] = info
      
 def addConstituentID(consList, size, artworks):
+    #Sirve para recolectar los ID de los artistas de las obras de arte, sin tomar en cuenta si estan repetidos o no
+    #  (Habran repetidos, pues servira para contar las nacionalidades)
+
     for ind in range(1,size):
         item = lt.getElement(artworks, ind)
         constituentID = item['ConstituentID'].split(',')
@@ -147,6 +150,8 @@ def subListByDate(lst,date1,date2):
 
 # Funciones de consulta
 def getNatInfo(artists_info, artistsInfo):
+    # Se encarga de agarrar los ID de los artistas y devolver un dict con los datos de las nacionalidades (conteo de obras y artistas)
+    
     natList = {
 
     }
@@ -169,6 +174,8 @@ def getNatInfo(artists_info, artistsInfo):
     return natList
 
 def getArtworksbyArtists(artists, artworks, artists_info):
+    #Con IDs de artistas, busca sus obras y las muestra en pantalla
+
     artworksByAr = newList('ARRAY_LIST', None)
 
     for artist in artists:
@@ -268,6 +275,7 @@ def getArtistID(name,artists_info):
 
 
 def getArtistbyConID(codes, artists_info):
+    #Dados unos Cons ID (lista), devuelve los nombres del artista en un Dict
     names = {}
 
     for code in codes:
@@ -301,6 +309,8 @@ def compareTechnique(technique,artistTecniques):
 
 
 def cmpArtworkByDateAdquired(artwork1,artwork2):
+    # Compara el dia de adquisicion de una obra, devolviendo True si el primero es menor
+
     date1 = artwork1["DateAcquired"].split("-")
     date2 = artwork2["DateAcquired"].split("-")
     if len(date1)!= 3:
@@ -320,6 +330,7 @@ def cmpArtworkByDateAdquired(artwork1,artwork2):
         return False
 
 def compareCont(item1, item2):
+    #Compara cual de los dos conteos es mayor (Se utiliza para ordenar las nacionalidades)
     if item1[0] > item2[0]:
         return True
     else:
@@ -345,7 +356,7 @@ def sortNat(consIDs):
 
 
 def sortByDate(lst, sortType):
-
+    # Sirve para elegir el tipo de ordenamiento
     if sortType == 1:
         a = ins.sort(lst, cmpArtworkByDateAdquired)
         print(a)
