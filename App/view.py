@@ -91,7 +91,9 @@ while True:
         controller.sortByDate(catalog['artworks'], date1,date2,tamanio, sortType)
 
     elif int(inputs[0]) == 4:
-        #TODO algo del req 3
+        #TODO acabar req 3 y reemplazar el nombre por name cuando este listo
+        name = input("Digite el nombre del artista a buscar: ")
+
         controller.artistsTecnique(catalog["artworks"],artists_info,"Louise Bourgeois")
         
     elif int(inputs[0]) == 5:

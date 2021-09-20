@@ -150,7 +150,7 @@ def subListByDate(lst,date1,date2):
 
 # Funciones de consulta
 def getNatInfo(artists_info, artistsInfo):
-    # Se encarga de agarrar los ID de los artistas y devolver un dict con los datos de las nacionalidades (conteo de obras y artistas)
+    """Se encarga de agarrar los ID de los artistas y devolver un dict con los datos de las nacionalidades (conteo de obras y artistas)"""
     
     natList = {
 
@@ -174,7 +174,7 @@ def getNatInfo(artists_info, artistsInfo):
     return natList
 
 def getArtworksbyArtists(artists, artworks, artists_info):
-    #Con IDs de artistas, busca sus obras y las muestra en pantalla
+    """Con IDs de artistas, busca sus obras y las muestra en pantalla organizandolas por titulo"""
 
     artworksByAr = newList('ARRAY_LIST', None)
 
@@ -204,45 +204,53 @@ def getArtworksbyArtists(artists, artworks, artists_info):
 
 def getArtworksByArtistsTechnique(artistName,artistID,artworks):
     """
-    Recibe el ID del artista, extrae los artworks y los ordena por tecnica ademas de retornar
+    Recibe el ID del artista, extrae los artworks y los ordena por tecnica ademas de obtener
     el numero de obras hechas con cierta tecnica
 
-    artistID - Id del artista
+    Mostrara al usuario la tecnica mas usada (junto con las otras 5 mas usadas) y 
+    algunas obras hechas con esta tecnica
+
+    artistName - Nombre del artista en str (Dado por el usuario en view)
+    artistID - Id del artista (Dado por getArtistID)
     artworks - Datos de obras
-
-    Retorna en lista:
-
-    sortedArtworks - Obras ordenadas y seleccionadas
-    count - Diccionario usando tecnicas por llaves y numeros de obras por valor
     """
-    #TODO Acabar
-    resultado = newList('ARRAY_LIST', None)
-    conteo = {}
-    for artwork in artworks:
 
-        codes = artwork["ConstituentID"].split(",")
-        if contOrNot (artistID,codes) == True:
-            continue
-        if artistID == artwork["ConstituentID"]:
-            lt.addLast(resultado,artwork)
+    if artistID == 0: #Si no encontro un ID con la funcion getArtistID, no realizara el proceso
+        print("No se encontro el artista en los registros.")
+    else:
+        resultado = newList('ARRAY_LIST', None)
+        conteo = {}
+        sizeArtworks = lt.size(artworks)
+        #Extraccion de obras que coincidan con el ID del artista
+        for artwork in range(0,sizeArtworks+1):
+            tempArtwork = lt.getElement(artworks,artwork) #Seleccionar registro
+            codes = tempArtwork["ConstituentID"].split(",") #Obtener IDs de autores
+            for i in range(len(codes)):
+                codes[i] = int(codes[i].strip("[").strip("]")) #Eliminar los [ ] y convertir a numero
 
-    #print(resultado)
+            if artistID in codes: #Revisa si el codigo del artista esta en los codigos de los autores de la obra
+                print(artistID)
+                print(codes)
+                info = [tempArtwork["Title"],tempArtwork["Date"],tempArtwork["Medium"],tempArtwork["Dimensions"]] #Añadir a lista que tiene los datos filtrados
+                lt.addFirst(resultado,info)
+
+                #TODO preguntar si este tipo de lista esta bien o si toca con las funciones
+                if tempArtwork["Medium"] not in conteo.keys(): #Añadir tecnica / medio si no existia en el registro
+                    conteo[tempArtwork["Medium"]] = 0
+                conteo[tempArtwork["Medium"]] += 1 #Contar uno mas en la tecnica / el medio
     
-    #me.sort(resultado,compareMedium)
+        #TODO implementar merge para organizar y mostrar los resultados asi como lo pide el enunciado
+        #me.sort(resultado,compareMedium)
 
-    for artwork in resultado:
-        if artwork["Medium"] not in conteo.keys():
-            conteo[artwork["Medium"]] = 0
-        conteo[artwork["Medium"]] += 1
+        resultadoTabla = pd.DataFrame(resultado["elements"], columns=["Title","Date","Medium","Dimensions"]) #Aplicar para mostrar los tres ejemplos mas abajo
 
-    resultado = pd.DataFrame(resultado["elements"], colums=["Title","Date","Medium","Dimensions"])
+        print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(lt.size(resultado))+" obras a su nombre en el museo.")
+        print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
+        print("Su top 5 de medios / tecnicas son:")
+        print(pd.DataFrame(conteo[:5])) #??? Corregir para que muestre las 5 tecnicas / medios mas usados no sin antes haberlos organizado aaaaa
 
-    print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(len(resultado))+" obras a su nombre en el museo.")
-    print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
-    print("Su top 5 de medios / tecnicas son:")
-    print(pd.DataFrame(conteo[:5]))
-
-    print("Tres ejemplos de "+conteo.keys()[0]+"de la coleccion son: ")
+        print("Tres ejemplos de "+conteo.keys()[0]+"de la coleccion son: ")
+        print(resultadoTabla)
     
 
 def contOrNot(artist,codes):
@@ -254,22 +262,13 @@ def contOrNot(artist,codes):
 
 def getArtistID(name,artists_info):
     """Recibe por parametro el nombre del artista junto con el info de los artistas y devuelve su ID"""
-    result = 0
-    size = lt.size(artists_info)
-    complete = False
-    artist = 1
-    while artist <= size and not complete:
-        #TODO Averiguar por que esta cosa no toma un registro en especifico
-        temp = lt.getElement(artists_info,artist)
-        Dict = lt.firstElement(artists_info)
-        print(Dict)
-        data = Dict[temp]
-        print(temp)
-        if temp["DisplayName"].lower == name.lower():
-            result = temp["ConstituentID"]
-            complete = True
-        artist += 1
-    print(result)
+    result = 0 #ID del artista. Se mantendra en 0 si no lo encuentra
+    temp = lt.getElement(artists_info,1) #Accede a los registros
+    
+    for i in temp: #Recorre
+        if temp[i]["DisplayName"].lower() == name.lower(): #Compara nombre
+            result = temp[i]["ConstituentID"] #Toma el ID
+            break #Rompe el for
     return result
 
 
