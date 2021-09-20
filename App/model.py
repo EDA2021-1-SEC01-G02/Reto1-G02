@@ -25,6 +25,8 @@
  """
 
 
+from DISClib.ADT.stack import top
+from DISClib.ADT.orderedmap import keys
 from App.controller import artistsTecnique
 from DISClib.DataStructures.arraylist import addLast, defaultfunction, firstElement, getElement
 import config as cf
@@ -229,8 +231,6 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
                 codes[i] = int(codes[i].strip("[").strip("]")) #Eliminar los [ ] y convertir a numero
 
             if artistID in codes: #Revisa si el codigo del artista esta en los codigos de los autores de la obra
-                print(artistID)
-                print(codes)
                 info = [tempArtwork["Title"],tempArtwork["Date"],tempArtwork["Medium"],tempArtwork["Dimensions"]] #Añadir a lista que tiene los datos filtrados
                 lt.addFirst(resultado,info)
 
@@ -242,14 +242,26 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
         #TODO implementar merge para organizar y mostrar los resultados asi como lo pide el enunciado
         #me.sort(resultado,compareMedium)
 
+        sortedConteo = {}
+        sortedMediums = sorted(conteo,key=conteo.get,reverse=True)
+        for medium in sortedMediums:
+            sortedConteo[medium] = conteo[medium]
+
+        topConteo = lt.newList('ARRAY_LIST', None)
+        for i in range(0,5):
+            info = [list(sortedConteo.keys())[i],list(sortedConteo.values())[i]]
+            lt.addLast(topConteo,info)
+        topMedium = lt.getElement(topConteo,1)
+
         resultadoTabla = pd.DataFrame(resultado["elements"], columns=["Title","Date","Medium","Dimensions"]) #Aplicar para mostrar los tres ejemplos mas abajo
+        resultadoTabla = resultadoTabla[resultadoTabla["Medium"]==str(topMedium[0])]
 
         print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(lt.size(resultado))+" obras a su nombre en el museo.")
         print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
         print("Su top 5 de medios / tecnicas son:")
-        print(pd.DataFrame(conteo[:5])) #??? Corregir para que muestre las 5 tecnicas / medios mas usados no sin antes haberlos organizado aaaaa
+        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"]))
 
-        print("Tres ejemplos de "+conteo.keys()[0]+"de la coleccion son: ")
+        print("Tres ejemplos de "+str(topMedium[0])+"de la coleccion son: ")
         print(resultadoTabla)
     
 
