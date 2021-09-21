@@ -37,7 +37,7 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- listar cronológicamente los artistas ")
     print("3- Listar cronológicamente las adquisiciones. ")
     print("4- Consultar artista por medio / tecnica.")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
@@ -76,7 +76,9 @@ while True:
         print("Ultimos Artworks cargados:")
 
     elif int(inputs[0]) == 2:
-        print(lt.firstElement(artists_info))
+        year1 = 1920
+        year2 = 1985
+        controller.sortArtistByDate(artists_info, year1, year2)
 
     elif int(inputs[0]) == 3:
         print('Ingrese la fecha de inicio en el formato aaaa-mm-dd')

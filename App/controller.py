@@ -62,6 +62,11 @@ def loadArtistsinfo(artists_info):
 
 
 # Funciones de ordenamiento
+
+def sortArtistByDate(artists_info, year1, year2):
+    sortedArtists = (model.sortArtistByDate(artists_info))
+    model.getYearRange(sortedArtists, year1, year2)
+
 def sortByDate(artworks, date1, date2, artists_info):
     
     model.sortByDate(artworks)
@@ -97,10 +102,4 @@ def ObrasPorNacionalidad(artworks, artist_info):
     model.addConstituentID(consIDs, size, artworks)
     natList = model.getNatInfo(artist_info, consIDs)
     firstEl = model.sortNat(natList)
-    model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info)
-
-
-    
-
-
-    
+    model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info, firstEl)

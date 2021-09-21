@@ -28,7 +28,7 @@
 from DISClib.ADT.stack import top
 from DISClib.ADT.orderedmap import keys
 from App.controller import artistsTecnique
-from DISClib.DataStructures.arraylist import addLast, defaultfunction, firstElement, getElement
+from DISClib.DataStructures.arraylist import addLast, defaultfunction, firstElement, getElement, subList
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -197,6 +197,35 @@ def printArtworks(lst):
 
 
 # Funciones de consulta
+def getYearRange(artists_info, year1, year2):
+    size = lt.size(artists_info) +1
+    for pos in range(1, size):
+        temp =  lt.getElement(artists_info, pos)['BeginDate']
+        if cmpArtistByDate(temp, year1) == False:
+            firstPos = pos 
+            break
+    for pos in range(firstPos, size):
+        temp =  lt.getElement(artists_info, pos)['BeginDate']
+        if cmpArtistByDate(temp, year2) == False:
+            secondPos = pos
+            if int(temp)> int(year2):
+                break
+
+    len = secondPos - firstPos
+    rangeList = lt.subList(artists_info,firstPos, len)
+    sizeRange = lt.size(rangeList)
+    lista = newList('ARRAY_LIST', None)
+    print('Entre los años %s y %s esuvieron activos %s artistas' %(year1, year2, sizeRange))
+    for pos in range(1, 4):
+        lt.addLast( lista,(lt.getElement(rangeList,pos)))
+
+    for pos in range(sizeRange-2, sizeRange+1):
+        lt.addLast( lista,(lt.getElement(rangeList,pos)))
+
+    print(pd.DataFrame(lista['elements']))
+    
+    
+
 def getNatInfo(artists_info, artistsInfo):
     """Se encarga de agarrar los ID de los artistas y devolver un dict con los datos de las nacionalidades (conteo de obras y artistas)"""
     
@@ -211,7 +240,7 @@ def getNatInfo(artists_info, artistsInfo):
         data = dict[temp]
         nat = data['Nationality'].lower()
         if nat == '' or nat == 'nationality unknown':
-            continue
+            nat = 'unknown'
         if nat not in natList:
             natList[nat] = [1]
             natList[nat].append([])
@@ -221,7 +250,7 @@ def getNatInfo(artists_info, artistsInfo):
             natList[nat][1].append(temp)
     return natList
 
-def getArtworksbyArtists(artists, artworks, artists_info):
+def getArtworksbyArtists(artists, artworks, artists_info, firstEl):
     """Con IDs de artistas, busca sus obras y las muestra en pantalla organizandolas por titulo"""
 
     artworksByAr = newList('ARRAY_LIST', None)
@@ -247,6 +276,7 @@ def getArtworksbyArtists(artists, artworks, artists_info):
                     lt.addLast(artworksByAr,info)
                     break
     me.sort(artworksByAr,compareTitle)
+    print('La nacionalidad con mas obras es %s con %s obras.' %(firstEl.capitalize(),lt.size(artworksByAr)))
     a = pd.DataFrame(artworksByAr['elements'], columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
     print(a)
 
@@ -415,6 +445,23 @@ def compareCont(item1, item2):
     else:
         return False
 
+def cmpArtistByDate(artist1, artist2):
+    if type(artist1) != int and type(artist1) != str:
+        date1 = int(artist1['BeginDate'])
+    else:
+        date1= int(artist1)
+    
+    if type(artist2) != int and type(artist2) != str:
+        date2 = int(artist2['BeginDate'])
+    else:
+        date2 = int(artist2)
+
+    if date1 < (date2):
+        return True
+    else:
+        return False
+    
+
 # Funciones de ordenamiento
 def sortNat(consIDs):
     natSort = newList('ARRAY_LIST', None)
@@ -430,11 +477,17 @@ def sortNat(consIDs):
         space = 25 - len(nat[1]) - len(str(nat[0]))
         print(nat[1].capitalize(), space * " " , nat[0])
     great = lt.firstElement(lessEl)
-    print('La nacionalidad con mas obras es %s con %s obras.' %(great[1].capitalize(),great[0]))
     return great[1]
 
 
 def sortByDate(artworks):
     me.sort(artworks,cmpArtworkByDateAdquired)
-    
-    
+
+def sortArtistByDate(artists_info):
+    artList = newList('ARRAY_LIST',None)
+    dict =  lt.firstElement(artists_info)
+    for artist in dict:
+        lt.addLast(artList,dict[artist])
+    me.sort(artList,cmpArtistByDate)
+    return artList
+
