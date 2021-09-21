@@ -129,24 +129,70 @@ def sublist(lst,pos,numelement):
     return lt.sublist(lst,pos,numelement)
 
 
-def subListByDate(lst,date1,date2):
-    size = 1 + lt.size(lst)
-    dateStart = {'DateAcquired' : date1}
-    dateEnd = {'DateAcquired' : date2}
-    for i in range(1, size):
-        if cmpArtworkByDateAdquired(dateStart, lt.getElement(lst,i)) == True:
-            pos1 = i - 1
-           
+def getArtworksByDate(artworks, date1, date2):
+    size = lt.size(artworks) + 1
+    contPur =  0
+    artistas = newList('ARRAY_LIST', None)
+    for pos in range(1, size):
+        temp = lt.getElement(artworks, pos)['DateAcquired']
+        if cmpDateAdquired(temp,date1) == False:
+            firstPos =  pos 
             break
-    for i in range(pos1, size):
-        if cmpArtworkByDateAdquired(dateEnd, lt.getElement(lst,i)) == True:
-            pos2 = i - 1
-           
+    for pos in range(firstPos, size):
+        temp = lt.getElement(artworks, pos)['DateAcquired']
+        temp2 = lt.getElement(artworks, pos)['ConstituentID']
+        temp3 =  temp2.split(',')
+        for code in temp3:
+            lt.addLast(artistas,code.strip().strip('[').strip(']')) 
+        if cmpDateAdquired(temp, date2) == False:
+            secondPos =  pos 
             break
-    numelement = pos2 - pos1
-    
-    a= lt.subList(lst, pos1, numelement)
+    len =  secondPos - firstPos
+    artworksbyDate = lt.subList(artworks, firstPos, len)
+    size =  lt.size(artworksbyDate)
 
+    for pos in range(1,size+1):
+        item =  lt.getElement(artworksbyDate,pos)
+        str = item['CreditLine'].lower()
+        if 'purchase' in str:
+            contPur += 1
+    artsize =  lt.size(artistas) -1
+
+    print('Entre las fechas %s y %s se adquirieron %s obras unicas y %s fueron compradas.\n Y con un total de %s artistas' %(date1, date2,size, contPur,artsize))
+    return((artworksbyDate))
+
+def getSixArtworks(lst, artists_info):
+    list = newList('ARRAY_LIST', None)
+    size =  lt.size(lst)+1
+    size2 = size-3
+    for pos in range (1, 4):
+        item = lt.getElement(lst, pos)
+        consID = item['ConstituentID'].split(',')
+        names = getArtistbyConID(consID, artists_info)
+        string = ''
+        for name in names:
+            string += names[name] + ', '
+        item['ConstituentID'] = string
+        lt.addLast(list,item)
+    
+    for pos in range(size2,size):
+        item = lt.getElement(lst, pos)
+        consID = item['ConstituentID'].split(',')
+        names = getArtistbyConID(consID, artists_info)
+        string = ''
+        for name in names:
+            string += names[name] + ', '
+        item['ConstituentID'] = string
+        lt.addLast(list, item)
+    printArtworks(list)
+
+def printArtworks(lst):
+    size = 1 + lt.size(lst)
+    lista =  []
+    for pos in range(1,size):
+        lista.append(lt.getElement(lst,pos))
+    a = pd.DataFrame(lista)
+    print(a[['Title','ConstituentID', 'DateAcquired']])
 
 
 
@@ -301,6 +347,28 @@ def getArtistbyConID(codes, artists_info):
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def cmpDateAdquired(date1,date2):
+    date1 = date1.split("-")
+    date2 = date2.split("-")
+    if len(date1)!= 3:
+        return True
+    if len(date2) != 3:
+        return True
+
+    if int(date1[0]) < int(date2[0]):
+        return True
+    elif int( date1[0]) == int(date2[0]):
+        if date1[1] < date2[1]:
+            return True
+        elif int(date1[1]) == int(date2[1]):
+            if int(date1[2]) < int(date2[2]):
+                return True  
+            else:
+                return False
+        else:
+            return False
+    else:
+        return False
 
 def compareartists(artistname1, artist):
     if (artistname1.lower() in artist['name'].lower()):
@@ -366,15 +434,7 @@ def sortNat(consIDs):
     return great[1]
 
 
-def sortByDate(lst, sortType):
-    # Sirve para elegir el tipo de ordenamiento
-    if sortType == 1:
-        a = ins.sort(lst, cmpArtworkByDateAdquired)
-        print(a)
-    elif sortType == 2:
-        sa.sort(lst,cmpArtworkByDateAdquired)
-    elif sortType == 3:
-        me.sort(lst,cmpArtworkByDateAdquired)
-    elif sortType == 4:
-        qu.sort(lst,cmpArtworkByDateAdquired)
+def sortByDate(artworks):
+    me.sort(artworks,cmpArtworkByDateAdquired)
+    
     

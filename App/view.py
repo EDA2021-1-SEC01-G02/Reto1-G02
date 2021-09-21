@@ -37,8 +37,8 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Consultar los top x ")
-    print("3- Consultar los top x ")
+    print("2- ")
+    print("3- Listar cronológicamente las adquisiciones. ")
     print("4- Consultar artista por medio / tecnica.")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
 
@@ -77,18 +77,14 @@ while True:
 
     elif int(inputs[0]) == 2:
         print(lt.firstElement(artists_info))
+
     elif int(inputs[0]) == 3:
-        date1 = '2011-01-01'
-        date2 = '2018-12-12'
-        tamanio = int(input("Tamaño de muestra: "))
-        print("Elija que tipo de ordenamiento desea: ")
-        print("1- InsertionSort")
-        print("2- Shell")
-        print("3- Merge ")
-        print("4- Quick")
-        sortType = input('')
-        
-        controller.sortByDate(catalog['artworks'], date1,date2,tamanio, sortType)
+        print('Ingrese la fecha de inicio en el formato aaaa-mm-dd')
+        date1 = input('--  ').strip()
+        print('Ingrese la fecha final en el formato aaaa-mm-dd' )
+        date2 = input( '--  ').strip()  
+        data_artists = lt.firstElement(artists_info)
+        controller.sortByDate(catalog['artworks'], date1,date2, artists_info)
 
     elif int(inputs[0]) == 4:
         #TODO acabar req 3 y reemplazar el nombre por name cuando este listo

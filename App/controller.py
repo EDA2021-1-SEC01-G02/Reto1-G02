@@ -62,11 +62,26 @@ def loadArtistsinfo(artists_info):
 
 
 # Funciones de ordenamiento
-def sortByDate(lst,date1,date2,tamanio,sortType):
+def sortByDate(artworks, date1, date2, artists_info):
+    
+    model.sortByDate(artworks)
+    range = lt.lastElement(artworks)['DateAcquired']
+    while model.cmpDateAdquired(date1,range) == False :
+        if date1 <= range:
+            break
+        print('Ingrese una fecha de inicio valida en el formato aaaa-mm-dd (Menor a %s)' %(range))
+        date1 = input('--  ').strip()
 
-    print('  ')
-    model.sortByDate(lst,sortType )
-    temp = model.subListByDate(lst,date1,date2)
+    while model.cmpDateAdquired(date2,range) == False :
+        if date2 <= range:
+            break
+        print('Ingrese una fecha final valida en el formato aaaa-mm-dd (Menor a %s)' %(range))
+        date2 = input('--  ').strip()
+    
+
+    artworksByDate = model.getArtworksByDate(artworks,date1,date2)
+
+    a =model.getSixArtworks(artworksByDate, artists_info)    
     
 
 # Funciones de consulta sobre el catálogo
