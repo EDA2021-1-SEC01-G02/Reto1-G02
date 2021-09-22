@@ -77,8 +77,8 @@ while True:
         print("Ultimos Artworks cargados:")
 
     elif int(inputs[0]) == 2:
-        year1 = 1920
-        year2 = 1985
+        year1 = int(input("Digite el AÑO INICIAL: "))
+        year2 = int(input("Ahora digite el AÑO FINAL: "))
         controller.sortArtistByDate(artists_info, year1, year2)
 
     elif int(inputs[0]) == 3:
@@ -99,7 +99,7 @@ while True:
 
     elif int(inputs[0]) == 6:
         dep = input("Digite el departamento al cual se realizara la consulta: ")
-        controller.precioTransporte(catalog["artworks"],artists_info,"Drawings & Prints")
+        controller.precioTransporte(catalog["artworks"],artists_info,dep)
 
     else:
         sys.exit(0)
