@@ -276,8 +276,16 @@ def getArtworksbyArtists(artists, artworks, artists_info, firstEl):
                     lt.addLast(artworksByAr,info)
                     break
     me.sort(artworksByAr,compareTitle)
+    sixEl = newList('ARRAY_LIST', None)
+    sizeSub = lt.size(artworksByAr)
+    for pos in range(1,4):
+        temp = lt.getElement(artworksByAr,pos)
+        lt.addLast(sixEl, temp)
+    for pos in range(sizeSub-4,sizeSub):
+        temp = lt.getElement(artworksByAr,pos)
+        lt.addLast(sixEl, temp)
     print('La nacionalidad con mas obras es %s con %s obras.' %(firstEl.capitalize(),lt.size(artworksByAr)))
-    a = pd.DataFrame(artworksByAr['elements'], columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
+    a = pd.DataFrame(sixEl['elements'], columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
     print(a)
 
 def getArtworksByArtistsTechnique(artistName,artistID,artworks):
@@ -551,7 +559,7 @@ def compareartists(artistname1, artist):
     return -1
 
 def compareTitle(artwork1, artwork2):
-    if artwork1[1].lower() > artwork2[1].lower():
+    if artwork1[1].lower() < artwork2[1].lower():
         return True
     return False
     
