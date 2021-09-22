@@ -356,7 +356,7 @@ def getDepArtworks (artworks,dep):
 
     for i in range(0,size+1):
         artwork = lt.getElement(artworks,i)
-        if artwork["Department"] == dep:
+        if artwork["Department"].lower() == dep.lower():
             lt.addLast(resultado,artwork)
     
     return resultado
@@ -394,7 +394,7 @@ def calculatePrice(artworks,artists):
                 artworkWidth = float(artworkWidth)
                 if (artworkHeigh != 0) and (artworkWidth != 0): #Para evitar dividir entre cero
                     artwork2dSize = artworkHeigh * artworkWidth
-                    artwork2dCost = 72 * (artwork2dSize/100) #Convierte a metros cuadrados y saca el precio
+                    artwork2dCost = 72 * (artwork2dSize/10000) #Convierte a metros cuadrados y saca el precio
                     size2d = True
 
                     artworkDepth = artwork["Depth (cm)"]
@@ -403,7 +403,7 @@ def calculatePrice(artworks,artists):
                         if artworkDepth != 0: #Para evitar dividir entre cero
                             artwork3dSize = artwork2dSize * artworkDepth
                             size3d = True
-                            artwork3dCost = 72 * (artwork3dSize/100) #Convierte a metros cubicos y saca el precio
+                            artwork3dCost = 72 * (artwork3dSize/1000000) #Convierte a metros cubicos y saca el precio
                         else: #Si son solo dos dimensiones
                             artwork3dCost = 0
                             size3d = False
@@ -446,21 +446,27 @@ def showPrice(artworks,weight,cost,dep):
     else:
         size = lt.size(artworks)
         artworksByDate = me.sort(artworks,cmpArtworkByDate)
-        sizeDate = lt.size(artworksByDate)
+
+        olderList = lt.newList('ARRAY_LIST', None)
+        for pos in range (1,size+1):
+            artwork = lt.getElement(artworksByDate,pos)
+
+            if artwork[4] != '':
+                lt.addLast(olderList,artwork)
+        minolderList = subList(olderList,1,6)
+        minolderList = pd.DataFrame(minolderList["elements"],columns=["ID","Titulo","Artistas","Medio / Tecnica","Fecha","Dimensiones","Clasificacion","Costo de transporte (USD)","URL"])
+
+        artworksByDate = me.sort(artworks, cmpArtworkByCost)
 
         expensiveList = lt.newList('ARRAY_LIST', None)
         for pos in range(1,6):
             artwork = lt.getElement(artworksByDate,pos)
             lt.addLast(expensiveList,artwork)
             
+            
         expensiveList = pd.DataFrame(expensiveList["elements"],columns=["ID","Titulo","Artistas","Medio / Tecnica","Fecha","Dimensiones","Clasificacion","Costo de transporte (USD)","URL"])
 
-        olderList = lt.newList('ARRAY_LIST', None)
-        for pos in range (sizeDate-5,sizeDate+1):
-            artwork = lt.getElement(artworksByDate,pos)
-            lt.addLast(olderList,artwork)
-        olderList = pd.DataFrame(olderList["elements"],columns=["ID","Titulo","Artistas","Medio / Tecnica","Fecha","Dimensiones","Clasificacion","Costo de transporte (USD)","URL"])
-
+        
         print ("El MoMa transportara "+str(size)+" obras del departamento de "+dep+".")
         print("RECUERDE!!!, NO TODOS los datos del MoMa estan completos!!!... Esto es solo un aproximado al valor real.")
         print("Peso estimado de carga: "+str(weight))
@@ -469,7 +475,21 @@ def showPrice(artworks,weight,cost,dep):
         print("El TOP 5 de los elementos mas costosos de transportar es:")
         print(expensiveList)
         print("El TOP 5 de los elementos mas viejos a transportar es:")
-        print(olderList)
+        print(minolderList)
+
+def cmpArtworkByCost(artwork1,artwork2):
+    cost1 = artwork1[7]
+    cost2 = artwork2[7]
+    if cost1 == '':
+        cost1 =  0
+    if cost2 == '':
+        cost2 = 0
+    if float(cost1) > float(cost2):
+        return True
+    else:
+        return False
+
+    pass
 
 def contOrNot(artist,codes):
     for i in codes:
@@ -562,10 +582,14 @@ def cmpArtworkByDate(artwork1,artwork2):
     """
     Compara la fecha de dos obras, donde devuelve True si el primero es mas viejo
     """
-    date1 = artwork1[0]
-    date2 = artwork2[0]
 
-    if int(date1) > int(date2):
+    date1 = artwork1[4]
+    date2 = artwork2[4]
+    if date1 == '':
+        date1 =  0
+    if date2 == '':
+        date2 = 0
+    if int(date1) < int(date2):
         return True
     else:
         return False
