@@ -102,4 +102,9 @@ def ObrasPorNacionalidad(artworks, artist_info):
     model.addConstituentID(consIDs, size, artworks)
     natList = model.getNatInfo(artist_info, consIDs)
     firstEl = model.sortNat(natList)
-    model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info, firstEl)
+    model.getArtworksbyArtists(natList[firstEl][1], artworks, artist_info)
+
+def precioTransporte(artworks,artists,dep):
+    depArtworks = model.getDepArtworks(artworks,dep)
+    prices = model.calculatePrice(depArtworks,artists)
+    model.showPrice(prices[0],prices[1],prices[2],dep)

@@ -35,12 +35,13 @@ operación solicitada
 """
 
 def printMenu():
-    print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- listar cronológicamente los artistas ")
-    print("3- Listar cronológicamente las adquisiciones. ")
+    print("Bienvenido:")
+    print("1- Cargar información en el catálogo.")
+    print("2- listar cronológicamente los artistas.")
+    print("3- Listar cronológicamente las adquisiciones.")
     print("4- Consultar artista por medio / tecnica.")
-    print("5- Clasificar las obras por la nacionalidad de sus creadores")
+    print("5- Clasificar las obras por la nacionalidad de sus creadores.")
+    print("6- Consultar costo para transportar obras de un departamento.")
 
 def initCatalog():
 
@@ -89,15 +90,16 @@ while True:
         controller.sortByDate(catalog['artworks'], date1,date2, artists_info)
 
     elif int(inputs[0]) == 4:
-        #TODO acabar req 3 y reemplazar el nombre por name cuando este listo
         name = input("Digite el nombre del artista a buscar: ")
-
-        controller.artistsTecnique(catalog["artworks"],artists_info,"Louise Bourgeois")
+        controller.artistsTecnique(catalog["artworks"],artists_info,name)
         
     elif int(inputs[0]) == 5:
         artworks = catalog['artworks']
         controller.ObrasPorNacionalidad(artworks, artists_info)
-        pass
+
+    elif int(inputs[0]) == 6:
+        dep = input("Digite el departamento al cual se realizara la consulta: ")
+        controller.precioTransporte(catalog["artworks"],artists_info,"Drawings & Prints")
 
     else:
         sys.exit(0)

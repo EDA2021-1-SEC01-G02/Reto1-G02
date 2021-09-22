@@ -288,6 +288,7 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
     Mostrara al usuario la tecnica mas usada (junto con las otras 5 mas usadas) y 
     algunas obras hechas con esta tecnica
 
+    Recibe:
     artistName - Nombre del artista en str (Dado por el usuario en view)
     artistID - Id del artista (Dado por getArtistID)
     artworks - Datos de obras
@@ -310,13 +311,9 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
                 info = [tempArtwork["Title"],tempArtwork["Date"],tempArtwork["Medium"],tempArtwork["Dimensions"]] #Añadir a lista que tiene los datos filtrados
                 lt.addFirst(resultado,info)
 
-                #TODO preguntar si este tipo de lista esta bien o si toca con las funciones
                 if tempArtwork["Medium"] not in conteo.keys(): #Añadir tecnica / medio si no existia en el registro
                     conteo[tempArtwork["Medium"]] = 0
                 conteo[tempArtwork["Medium"]] += 1 #Contar uno mas en la tecnica / el medio
-    
-        #TODO implementar merge para organizar y mostrar los resultados asi como lo pide el enunciado
-        #me.sort(resultado,compareMedium)
 
         sortedConteo = {}
         sortedMediums = sorted(conteo,key=conteo.get,reverse=True)
@@ -335,11 +332,144 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
         print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(lt.size(resultado))+" obras a su nombre en el museo.")
         print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
         print("Su top 5 de medios / tecnicas son:")
-        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"]))
+        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"])) #TODO: Solo imprime una de las 5 y tiene que imprimir las 5 menquepaso
 
         print("Tres ejemplos de "+str(topMedium[0])+"de la coleccion son: ")
         print(resultadoTabla)
+
+def getDepArtworks (artworks,dep):
+    """
+    Recibe los datos de las obras y el nombre del departamento
+
+    Buscara todas las obras correspondientes al departamento y las retornara en una nueva lista
+
+    Recibe:
+    artworks - Obras registradas
+    dep - Nombre del departamento a buscar
+
+    Retorna:
+    Lista con las obras correspondientes al departamento
+    """
+
+    resultado = lt.newList('ARRAY_LIST', None) #Crea la lista que contendra los registros filtrados
+    size = lt.size(artworks)
+
+    for i in range(0,size+1):
+        artwork = lt.getElement(artworks,i)
+        if artwork["Department"] == dep:
+            lt.addLast(resultado,artwork)
     
+    return resultado
+
+def calculatePrice(artworks,artists):
+    resultado = None
+    size = lt.size(artworks) 
+    if size != 0: #Revisa si encontro el departamento antes de continuar
+        
+        resultado = lt.newList('ARRAY_LIST', None) #Crea la lista donde se guardaran los datos junto con su precio
+        resultWeight = 0.0
+        resultCost = 0.0
+
+        for i in range(1,size+1): #Recorre registro por registro
+            artwork = lt.getElement(artworks,i)
+            
+            artworkWeight = artwork["Weight (kg)"] #Extrae el peso de la obra
+            if artworkWeight != "": #Si tiene valores, continuara
+                artworkWeight = float(artworkWeight)
+                if artworkWeight != 0: #Para evitar dividir entre 0
+                    resultWeight += artworkWeight #Añade el peso de la obra al contador
+                    artworkWeightCost = 72 * artworkWeight #Multiplica por la tarifa
+                    weight = True
+                else:
+                    artworkWeightCost = 0
+                    weight = False
+            else: 
+                artworkWeightCost = 0
+                weight = False
+
+            artworkHeigh = artwork["Height (cm)"]
+            artworkWidth = artwork["Width (cm)"]
+            if artworkHeigh != "" and artworkWidth != "": #Si tiene valores, continuara
+                artworkHeigh = float(artworkHeigh)
+                artworkWidth = float(artworkWidth)
+                if (artworkHeigh != 0) and (artworkWidth != 0): #Para evitar dividir entre cero
+                    artwork2dSize = artworkHeigh * artworkWidth
+                    artwork2dCost = 72 * (artwork2dSize/100) #Convierte a metros cuadrados y saca el precio
+                    size2d = True
+
+                    artworkDepth = artwork["Depth (cm)"]
+                    if artworkDepth != "": #Si existen tres dimensiones
+                        artworkDepth = float(artworkDepth)
+                        if artworkDepth != 0: #Para evitar dividir entre cero
+                            artwork3dSize = artwork2dSize * artworkDepth
+                            size3d = True
+                            artwork3dCost = 72 * (artwork3dSize/100) #Convierte a metros cubicos y saca el precio
+                        else: #Si son solo dos dimensiones
+                            artwork3dCost = 0
+                            size3d = False
+                    else: 
+                        artwork3dCost = 0
+                        size3d = False
+                else:
+                    artwork2dCost = 0
+                    size2d = False
+                    artwork3dCost = 0
+                    size3d = False
+            else:
+                artwork2dCost = 0
+                size2d = False
+                artwork3dCost = 0
+                size3d = False
+            
+            if (size2d or size3d or weight) and ((artwork2dCost > 0) or (artwork3dCost > 0) or (artworkWeightCost > 0)): #Si hay informacion para calcular la tarifa
+                if (artwork2dCost >= artworkWeightCost) and (artwork2dCost >= artwork3dCost): #Buscara cual es la tarifa mas costosa
+                    artworkCost = artwork2dCost
+                elif (artwork3dCost >= artwork2dCost) and (artwork3dCost >= artworkWeightCost):
+                    artworkCost = artwork3dCost
+                else:
+                    artworkCost = artworkWeightCost
+            else: #Si no hay informacion para calcular, se aplicara la regla por defecto (48 USD por obra)
+                artworkCost = 48
+            resultCost += artworkCost
+
+            codes = artwork['ConstituentID'].split(',')
+            info = [artwork["ObjectID"],artwork["Title"],getArtistbyConID(codes,artists),artwork["Medium"],artwork["Date"],artwork["Dimensions"],artwork["Classification"],artworkCost,artwork["URL"]]
+            lt.addLast(resultado,info)
+        
+    return (resultado,resultWeight,resultCost)
+
+def showPrice(artworks,weight,cost,dep):
+
+    if artworks == None:
+        print("Departamento no encontrado. Intente nuevamente")
+
+    else:
+        size = lt.size(artworks)
+        artworksByDate = me.sort(artworks,cmpArtworkByDate)
+        sizeDate = lt.size(artworksByDate)
+
+        expensiveList = lt.newList('ARRAY_LIST', None)
+        for pos in range(1,6):
+            artwork = lt.getElement(artworksByDate,pos)
+            lt.addLast(expensiveList,artwork)
+            
+        expensiveList = pd.DataFrame(expensiveList["elements"],columns=["ID","Titulo","Artistas","Medio / Tecnica","Fecha","Dimensiones","Clasificacion","Costo de transporte (USD)","URL"])
+
+        olderList = lt.newList('ARRAY_LIST', None)
+        for pos in range (sizeDate-5,sizeDate+1):
+            artwork = lt.getElement(artworksByDate,pos)
+            lt.addLast(olderList,artwork)
+        olderList = pd.DataFrame(olderList["elements"],columns=["ID","Titulo","Artistas","Medio / Tecnica","Fecha","Dimensiones","Clasificacion","Costo de transporte (USD)","URL"])
+
+        print ("El MoMa transportara "+str(size)+" obras del departamento de "+dep+".")
+        print("RECUERDE!!!, NO TODOS los datos del MoMa estan completos!!!... Esto es solo un aproximado al valor real.")
+        print("Peso estimado de carga: "+str(weight))
+        print("Costo estimado de carga: "+str(cost))
+
+        print("El TOP 5 de los elementos mas costosos de transportar es:")
+        print(expensiveList)
+        print("El TOP 5 de los elementos mas viejos a transportar es:")
+        print(olderList)
 
 def contOrNot(artist,codes):
     for i in codes:
@@ -359,8 +489,6 @@ def getArtistID(name,artists_info):
             break #Rompe el for
     return result
 
-
-
 def getArtistbyConID(codes, artists_info):
     #Dados unos Cons ID (lista), devuelve los nombres del artista en un Dict
     names = {}
@@ -372,9 +500,6 @@ def getArtistbyConID(codes, artists_info):
             info = dict[code2]['DisplayName']
             names[code2]  = info
     return names
-
-
-
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpDateAdquired(date1,date2):
@@ -409,11 +534,6 @@ def compareTitle(artwork1, artwork2):
     if artwork1[1].lower() > artwork2[1].lower():
         return True
     return False
-
-def compareTechnique(technique,artistTecniques):
-    if technique in artistsTecnique:
-        return True
-    return False
     
 
 
@@ -435,6 +555,18 @@ def cmpArtworkByDateAdquired(artwork1,artwork2):
         elif int(date1[1]) == int(date2[1]):
             if int(date1[2]) < int(date2[2]):
                 return True  
+    else:
+        return False
+
+def cmpArtworkByDate(artwork1,artwork2):
+    """
+    Compara la fecha de dos obras, donde devuelve True si el primero es mas viejo
+    """
+    date1 = artwork1[0]
+    date2 = artwork2[0]
+
+    if int(date1) > int(date2):
+        return True
     else:
         return False
 
