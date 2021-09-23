@@ -90,6 +90,7 @@ while True:
         controller.sortByDate(catalog['artworks'], date1,date2, artists_info)
 
     elif int(inputs[0]) == 4:
+        print("Importante!!! - Se recomienda que disminuya el zoom en la consola para que se puedan ver todos los datos")
         name = input("Digite el nombre del artista a buscar: ")
         controller.artistsTecnique(catalog["artworks"],artists_info,name)
         
