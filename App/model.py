@@ -24,6 +24,7 @@
  * Dario Correal - Version inicial
  """
 
+
 from DISClib.ADT.stack import top
 from DISClib.ADT.orderedmap import keys
 from App.controller import artistsTecnique
@@ -275,9 +276,9 @@ def getArtworksbyArtists(artists, artworks, artists_info, firstEl):
                     lt.addLast(artworksByAr,info)
                     break
     me.sort(artworksByAr,compareTitle)
-
+    works = artworksByAr['elements']
     print('La nacionalidad con mas obras es %s con %s obras.' %(firstEl.capitalize(),lt.size(artworksByAr)))
-    a = pd.DataFrame(artworks['elements'], columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
+    a = pd.DataFrame(works, columns=['ObjectId', 'Title','Artists', 'Date', 'Medium', 'Dimensions'])
     print(a)
 
 def getArtworksByArtistsTechnique(artistName,artistID,artworks):
@@ -332,10 +333,10 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
         print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(lt.size(resultado))+" obras a su nombre en el museo.")
         print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
         print("Su top 5 de medios / tecnicas son:")
-        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"]))
+        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"])) #TODO: Solo imprime una de las 5 y tiene que imprimir las 5 menquepaso
 
         print("Tres ejemplos de "+str(topMedium[0])+"de la coleccion son: ")
-        print(resultadoTabla.iloc[:3])
+        print(resultadoTabla)
 
 def getDepArtworks (artworks,dep):
     """
