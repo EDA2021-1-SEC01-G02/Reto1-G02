@@ -71,7 +71,7 @@ while True:
         artists_info = artistsInfo()
         loadData(catalog, artists_info)
         num_artworks = lt.size(catalog['artworks'])
-        num_artists = lt.size(artists_info)
+        num_artists = len(lt.getElement(artists_info,1))
         print('Artworks cargados: ' + str(num_artworks))
         print('Artistas cargados: ' + str(num_artists))
         print("Ultimos Artworks cargados:")

@@ -166,7 +166,7 @@ def getSixArtworks(lst, artists_info):
     size =  lt.size(lst)+1
     size2 = size-3
     for pos in range (1, 4):
-        item = lt.getElement(lst, pos)
+        item = lt.getElement(lst, pos).copy()
         consID = item['ConstituentID'].split(',')
         names = getArtistbyConID(consID, artists_info)
         string = ''
@@ -176,7 +176,7 @@ def getSixArtworks(lst, artists_info):
         lt.addLast(list,item)
     
     for pos in range(size2,size):
-        item = lt.getElement(lst, pos)
+        item = lt.getElement(lst, pos).copy()
         consID = item['ConstituentID'].split(',')
         names = getArtistbyConID(consID, artists_info)
         string = ''

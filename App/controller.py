@@ -48,13 +48,13 @@ def loadData(catalog, artists_info):
    
 
 def loadArtWorks(catalog):
-    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
+    artworksfile = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile, encoding = 'utf-8'))
     for artwork in input_file:
         model.addArtWork(catalog, artwork)
 
 def loadArtistsinfo(artists_info):
-    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
+    artistsfile = cf.data_dir + 'MoMA/Artists-utf8-small.csv'
     input_file =  csv.DictReader(open(artistsfile, encoding= 'utf-8'))
     
     for info in input_file:
@@ -94,7 +94,7 @@ def sortByDate(artworks, date1, date2, artists_info):
 
     artworksByDate = model.getArtworksByDate(artworks,date1,date2)
 
-    a =model.getSixArtworks(artworksByDate, artists_info)    
+    model.getSixArtworks(artworksByDate, artists_info)    
 
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
