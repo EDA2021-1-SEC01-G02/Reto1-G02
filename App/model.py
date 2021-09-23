@@ -24,7 +24,6 @@
  * Dario Correal - Version inicial
  """
 
-
 from DISClib.ADT.stack import top
 from DISClib.ADT.orderedmap import keys
 from App.controller import artistsTecnique
@@ -333,10 +332,10 @@ def getArtworksByArtistsTechnique(artistName,artistID,artworks):
         print(artistName+" con id de MoMa "+str(artistID)+" tiene "+str(lt.size(resultado))+" obras a su nombre en el museo.")
         print("Hay "+str(len(conteo))+" diferentes medios / tecnicas en su trabajo")
         print("Su top 5 de medios / tecnicas son:")
-        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"])) #TODO: Solo imprime una de las 5 y tiene que imprimir las 5 menquepaso
+        print(pd.DataFrame(topConteo["elements"],columns=["Medio / Tecnica","Conteo"]))
 
         print("Tres ejemplos de "+str(topMedium[0])+"de la coleccion son: ")
-        print(resultadoTabla)
+        print(resultadoTabla.iloc[:3])
 
 def getDepArtworks (artworks,dep):
     """
